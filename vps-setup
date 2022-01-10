@@ -20,6 +20,7 @@ Exit your terminal and ssh back in as your user 'jojo'.  From this point, you wi
 Update your distro
   sudo apt-get update
   sudo apt-get install nano vim # Nano is a text editor that is most like something you are probably used to, I prefer vim.  One or both may already be installed.
+  sudo apt-get install curl git # Both needed for many things, not just PLI node, may already be installed
   sudo apt-get upgrade
   sudo apt-get dist-upgrade
   sudo apt-get autoremove
