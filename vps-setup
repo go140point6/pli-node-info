@@ -120,5 +120,41 @@ The goal is this new session should FAIL if you try to use port 22 and should SU
 
 Once you have ensured your can start a new SSH session over port 55123, you can exit (close) the old terminal on port 22.
 
+Fail2ban (optional, unlikely needed unless you are stickign with port 22 for ssh)
+
+If you want to stick with port 22, I recommend fail2ban which will ban IP addresses who repeatedly attempt ssh access.  More info here:
+https://pimylifeup.com/raspberry-pi-fail2ban/
+
+  sudo apt-get install fail2ban
+  sudo cp -p /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+  sudo vim /etc/fail2ban/jail.local
+  sudo nano /etc/fail2ban/jail.local
+  
+  Find the section [sshd] which is line 279 for me.  Under "backend = %(sshd_backend)s", add:
+    enabled   = true
+    filter    = sshd
+    banaction = iptables-multiport
+    findtime  = 86400 # 86400 seconds = 1 day
+    bantime   = -1
+    maxretry  = 5
+    
+Note:  maxretry means you get 5 attempts to log in before getting your own IP address locked out.  Be sure you only use fail2ban after you have an ssh
+keypair setup and working, or if you are sticking to password authentication, make sure you type your password in correctly.  If you lock youself out,
+you will need to use your VPS control panel to get back in (this is different for every VPS).
+
+To see who is banned:
+  sudo fail2ban-client status sshd
+  
+To unban a particular IP Address:
+  sudo fail2ban-client set sshd unban {ip address} # No curly brackets, just the IP address i.e. 123.123.123.123
+    
+    
+  
+
+
+
+
+
+
 
     
