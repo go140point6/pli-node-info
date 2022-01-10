@@ -1,0 +1,58 @@
+Basic documentation on how your VPS should be configured, taking basic security and best practices.
+
+Note: All VPS's will use different base images for their distros, some install more basic tools than others.  
+This has been tested with Vultr and Racknerd Ubuntu 20.04 distros.
+
+When you first log in to your VPS, you are likely 'root'.  It is never considered best practice to run anything as root, you should
+create a regular user and run everything from that users.
+
+Change root password (optional):
+  passwd
+  
+Add regular user:
+  adduser -u jojo
+
+Add that user to the sudoers file:
+  adduser jojo sudo
+  
+Exit your terminal and ssh back in as your user 'jojo'.  From this point, you will do everything as 'jojo', never log in as root or 'su' (switch user) as root.
+
+Update your distro
+  sudo apt-get update
+  sudo apt-get install nano vim # Nano is a text editor that is most like something you are probably used to, I prefer vim.  One or both may already be installed.
+  sudo apt-get upgrade
+  sudo apt-get dist-upgrade
+  sudo apt-get autoremove
+  
+REBOOT to make sure any new kernel is active (maybe no needed, idk... I can't shake my Windows roots)
+
+SSH back in as your 'jojo' user.
+
+Optional, but highly recommended: Key-based Authentication.  
+Create a public/private key pair to use that to log in to your VPS.  You will turn off the ability to use passwords over SSH.
+If you ever need to, you can log in via your VPS's console with the root password.
+
+On the VPS, create the correct file and permissions:
+  mkdir ~/.ssh && chmod 700 ~/.ssh
+    
+Note: the tilde (~) means "my profile", so it's a shortcut for /home/jojo in this case.
+
+Install needed package (may already be installed):
+  sudo apt-get install openssh-client
+
+Create key pair:
+  ssh-keygen
+  [Enter] # Accept default path and filename of /home/jojo/.ssh/id_rsa
+  [Enter] # If used, a passphrase (password) needed everytime you attempt to read the private key.  Choice is yours.
+  [Enter] # Either repeat the passphrase or leave it blank again.
+  
+Rename and apply permissions to id_rsa.pub:
+  mv ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+  chmod 600 ~/.ssh/authorized_keys
+
+
+
+
+
+
+    
