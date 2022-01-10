@@ -50,9 +50,75 @@ Rename and apply permissions to id_rsa.pub:
   mv ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
   chmod 600 ~/.ssh/authorized_keys
 
+Note:  Now what? Well you need to copy the private key to your local workstation and refer to it when you start an ssh session.
+This is dependent to what you use for ssh.  I use PuTTY on Windows and part of that is Pagent that sits running and I have added
+my keys to.  Since I use passwords on my keys, Pagent asks me once for the password to unlock it and then won't ask again until
+I restart my PC or stop Pagent for some reason.  PuTTY recognizes it and automatically does the rest.  If you use Terminal (on Mac)
+you will likely have to point to the file and provide the password (if present) on the command line.  If you use some other software
+you will need to research it yourself.  Google is your friend.
 
+No matter what, test your key pair by opening another session using it before you turn off the ability to use a password with ssh.
+The point of having a key pair is you shouldn't be asked for a password when logging in, and if you don't specify your private key
+and password is turned off, you simply get denied access.
 
+This is what I see when I am successful: Authenticating with public key "is_rsa" from agent
 
+Configure SSH more Securely - Step 1 (optional but recommended - do this is steps, don't do 1 and 2 at the same time until you are
+confident you know what you are doing)
+
+Note: Do NOT close your terminal session after making these changes.  Leave your session running and start a new one.  This will
+ensure your key pair is working.
+
+Edit the file /etc/ssh/sshd_config:
+  sudo nano /etc/ssh/sshd_config
+  
+  Change:
+    #PasswordAuthentication yes # this may or may not be commented out... the # sign is a comment, it means ignore
+  To:
+    PasswordAuthentication no
+    
+  Ensure the following are set (should be default):
+    ChallengeResponseAuthentication no
+    UsePAM yes
+
+Save the file and enter the following:
+  sudo systemctl restart sshd
+  
+STOP!  Did you read the warning above to leave open this terminal window?  Start a new one to test.  The goal is to log in to your VPS without a password,
+using only the key pair for authentication.
+
+Configure SSH more Securely - Step 2 (optional but recommended)
+
+Note: Do NOT close your terminal session after making these changes.  Leave your session running and start a new one.  This will
+ensure your new port is working.
+
+This is probably the single most important change you can make because I *garuntee* you are getting hammered right now by script kiddies attempting to log in
+to your server via SSH over port 22 using brute force attacks.  This is because port 22 is the "standard" port for SSH.  You should change it.  
+Technically you should pick something between 49,152 and 65,535 according to the standard, but you need to open your firewall (and after you get things 
+working, close 22).
+
+In this example, I've chosen port 55123.
+
+If use ufw:
+  sudo ufw allow 55123
+  
+If using another firewall, you will need to figure out how to add.  This could be your VPS firewall (i.e. Ionos is on by default).
+
+Edit the file /etc/ssh/sshd_config:
+  sudo nano /etc/ssh/sshd_config
+  
+  Change:
+    #Port 22
+  To:
+    Port 55123
+    
+Save the file and enter the following:
+    sudo systemctl restart sshd
+  
+STOP!  Did you read the warning above to leave open this terminal window?  Start a new one to test, making sure to specify port 55123 as the port to use.
+The goal is this new session should FAIL if you try to use port 22 and should SUCCEED if you use port 55123.
+
+Once you have ensured your can start a new SSH session over port 55123, you can exit (close) the old terminal on port 22.
 
 
     
