@@ -25,7 +25,7 @@ Update your distro
   sudo apt-get dist-upgrade
   sudo apt-get autoremove
   
-REBOOT to make sure any new kernel is active (maybe no needed, idk... I can't shake my Windows roots)
+REBOOT to make sure any new kernel is active (maybe not needed, idk... I can't shake my Windows roots)
 
 SSH back in as your 'jojo' user.
 
@@ -100,10 +100,10 @@ working, close 22).
 
 In this example, I've chosen port 55123.
 
-If use ufw:
+If using ufw:
   sudo ufw allow 55123
   
-If using another firewall, you will need to figure out how to add.  This could be your VPS firewall (i.e. Ionos is on by default).
+If using another firewall, you will need to figure out how to add.  This could be your VPS firewall (i.e. Ionos VPS has it on by default).
 
 Edit the file /etc/ssh/sshd_config:
   sudo nano /etc/ssh/sshd_config
@@ -128,7 +128,6 @@ https://pimylifeup.com/raspberry-pi-fail2ban/
 
   sudo apt-get install fail2ban
   sudo cp -p /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-  sudo vim /etc/fail2ban/jail.local
   sudo nano /etc/fail2ban/jail.local
   
   Find the section [sshd] which is line 279 for me.  Under "backend = %(sshd_backend)s", add:
