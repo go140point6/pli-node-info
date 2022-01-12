@@ -1,0 +1,81 @@
+$domain = pli-oracle.mydomain.com
+$ip = 192.168.1.100
+$user = ubuntu
+
+snapd already installed on Ubuntu 20.04 (some distros)
+  snap --version
+  
+if missing
+  sudo apt-get update
+  sudo apt-get install snapd
+
+Ensure you have A record in DNS pointing to the IP address with your custom domain.  In this example:
+  $domain = pli-oracle.mydomain.com
+  $ip = 192.168.1.100
+
+Ensure latest version
+  sudo snap install core; sudo snap refresh core
+
+Install
+  sudo snap install --classic certbot
+
+Open port 80 if not open
+  sudo ufw allow 80
+Open port 6689 if not open
+  sudo ufw allow 6689
+
+Get certs:
+  sudo certbot certonly --standalone
+
+  Note:
+  1. Make sure this email address is something you check (put your real address in)
+  2. Agree to the ToS
+  3. Press N
+
+All certs are in /etc/letsencrypt/live/$domain/
+  fullchain.pem
+  privkey.pem
+  
+Fix permissions
+  sudo chmod 0755 /etc/letsencrypt/{live,archive}
+  sudo chmod 0640 /etc/letsencrypt/live/$domain/privkey.pem
+  sudo chgrp $user /etc/letsencrypt/live/$domain/privkey.pem
+  
+Add a renew_hook
+  sudo vim /etc/letsencrypt/renewal/$domain.conf
+
+  add to bottom:
+    renew_hook = runuser -l $user -c 'pm2 restart all --update-env'
+
+Note: user whatever text editor that you are comfortable with, i.e. sudo nano
+Note 2: $user is whichever user you are running the pli service
+
+Verify Renewal
+  systemctl list-timers
+  
+  Look for similar to verify:
+  NEXT                        LEFT          LAST                        PASSED       UNIT                         ACTIVATES
+  Mon 2022-01-03 21:54:00 PST 7h left       n/a                         n/a          snap.certbot.renew.timer     snap.certbot.renew.service
+  
+Test Renewal
+  sudo certbot renew --dry-run
+  
+Force Renewal
+  sudo certbot renew --force-renewal
+  
+Edit 2_nodeStartPM2.sh
+  Remove:
+    export PLUGIN_TLS_PORT=0
+    export SECURE_COOKIES=false
+  
+  Add:
+    export PLUGIN_TLS_PORT=6689
+    
+    and under . ~/.tmp_profile, add
+    export TLS_CERT_PATH=/etc/letsencrypt/live/$full_domain_name/fullchain.pem
+    export TLS_KEY_PATH=/etc/letsencrypt/live/$full_domain_name/privkey.pem
+    
+    i.e $full_domain_name = myoracle.mydomain.com
+    
+  Note: Be sure to restart the pli service:
+    pm2 restart all --update-env
