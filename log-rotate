@@ -16,6 +16,8 @@ Create new file in the /etc/logrotate.d/ directory, calling it whatever you want
 Add the following to the file and save:
 
     /home/jojo/.pm2/logs/*.log
+    /home/jojo/.plugin/*.jsonl
+    /home/jojo/.cache/*.logf
     {
             su jojo jojo
             rotate 10
@@ -33,12 +35,13 @@ Add the following to the file and save:
     
 Note: jojo is my user and you must specify the path to your logs that you want to rotate.  
 The asterisk (*) is a wildcard that will include anything, so in this case any file that 
-ends in .log will be rotated.
+ends in .log will be rotated.  Add multiple directories as shown, feel free to add any
+others that may be needed.
 
 If using root you likely don't need the su (switch user) part but it won't hurt.  Just
 replace jojo with root for both user and group.  Your path is likely /root/.pm2/logs/*.log
 
-What is going to happen?  Every night logroate will look in that directory, rotate the 
+What is going to happen?  Every night logroate will look in those diretories, rotate the 
 current log, compress the old log and delete the really old files, ensuring your logs don't
 get out of control.  I do 10 days, but you can make the rotate option a bigger number if you
 want to retain more logs.
