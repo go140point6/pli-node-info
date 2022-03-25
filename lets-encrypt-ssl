@@ -45,7 +45,7 @@ Add a renew_hook
   sudo vim /etc/letsencrypt/renewal/$domain.conf
 
   add to bottom:
-    renew_hook = runuser -l $user -c 'pm2 restart all --update-env'
+    renew_hook = "runuser -l $user -c 'pm2 restart all --update-env'"
 
 Note: user whatever text editor that you are comfortable with, i.e. sudo nano
 Note 2: $user is whichever user you are running the pli service
