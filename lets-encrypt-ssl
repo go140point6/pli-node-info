@@ -5,6 +5,13 @@ $user = ubuntu
 snapd already installed on Ubuntu 20.04 (some distros)
   snap --version
   
+STOP.  Is this server EthernetSevers or any server using OpenVZ containerization?  Run this command to check:
+  sudo systemd-detect-virt
+  
+If the output is openvz, don't use snap (you won't get the latest certbot but that is OK)
+
+--> IF NOT openvz, start here:
+
 if missing
   sudo apt-get update
   sudo apt-get install snapd
@@ -18,6 +25,12 @@ Ensure latest version
 
 Install
   sudo snap install --classic certbot
+
+--> IF openvz, start here:
+
+   sudo apt install certbot
+   
+--> NOW, continue here for both methods:
 
 Open port 80 if not open
   sudo ufw allow 80
