@@ -66,9 +66,12 @@ Note 2: $user is whichever user you are running the pli service
 Verify Renewal
   systemctl list-timers
   
-  Look for similar to verify:
+  Look for similar to verify (if snap used):
   NEXT                        LEFT          LAST                        PASSED       UNIT                         ACTIVATES
   Mon 2022-01-03 21:54:00 PST 7h left       n/a                         n/a          snap.certbot.renew.timer     snap.certbot.renew.service
+  
+  Look for similar to verify (if snap NOT used):
+  Wed 2022-05-18 22:58:20 PDT 13h left      n/a                         n/a          certbot.timer                certbot.service
   
 Test Renewal
   sudo certbot renew --dry-run
@@ -83,8 +86,6 @@ Edit 2_nodeStartPM2.sh
   
   Add:
     export PLUGIN_TLS_PORT=6689
-    
-    and under . ~/.tmp_profile, add
     export TLS_CERT_PATH=/etc/letsencrypt/live/$full_domain_name/fullchain.pem
     export TLS_KEY_PATH=/etc/letsencrypt/live/$full_domain_name/privkey.pem
     
