@@ -38,6 +38,7 @@ Open port 6689 if not open
   sudo ufw allow 6689
 
 Get certs:
+  sudo apt-get update
   sudo certbot certonly --standalone
 
   Note:
