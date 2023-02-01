@@ -3,6 +3,7 @@ Configure fail2ban
 
   sudo cp -p /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
   sudo vim /etc/fail2ban/jail.local
+  (or your editor of choice, i.e. nano)
 
 Find the sshd section (scroll down a bit).  Default is just enable through port... replace those three lines with all these:
 
