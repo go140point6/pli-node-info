@@ -24,7 +24,7 @@ check who's banned:
 unban ip:
   sudo fail2ban-client set sshd unban {ip address}
   
-  Note: you can and probably will ban your own IP at some point if you mistype your password to many times (you shoudl be using keys tho,
+  Note: you can and probably will ban your own IP at some point if you mistype your password to many times (you should be using keys tho,
   so that doesn't happen).  There is a section near the top that you can exempt your own IP address or you could raise the maxretry number
-  to something.  If you DO ban yourself, log in to your VPS through the hoster's console and unban your IP (the IP from the system you are
+  to something higher.  If you DO ban yourself, log in to your VPS through the hoster's console and unban your IP (the IP from the system you are
   attepmting to access your VPS, i.e. your home network IP).
