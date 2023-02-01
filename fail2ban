@@ -1,10 +1,8 @@
 Configure fail2ban
 (https://pimylifeup.com/raspberry-pi-fail2ban/)
 
-  ```
   sudo cp -p /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
   sudo vim /etc/fail2ban/jail.local
-  ```
 
 Find the sshd section (scroll down a bit).  Default is just enable through port... replace those three lines with all these:
 
@@ -18,13 +16,9 @@ maxretry  = 3
 logpath = %(sshd_log)s
 backend = %(sshd_backend)s
 
-  ```sudo systemctl restart fail2ban```
+  sudo systemctl restart fail2ban
 
 check who's banned:
-  ```
   sudo fail2ban-client status sshd
-  ```
 unban ip:
-  ```
   sudo fail2ban-client set sshd unban {ip address}
-  ```
