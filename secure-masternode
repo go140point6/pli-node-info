@@ -25,7 +25,7 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
       Note: IPAddress (what docker is using) and the ports docker is using for RPC and WSS (match to equivalent HostPort).
 
 4. Configure nginx:
-    - Edit /etc/nginx/nginx.conf and add the following (showing mainnet):
+    - Edit /etc/nginx/nginx.conf and add the following (showing mainnet) in the http block:
 
         ##
         # XDC Node RPC Reverse Proxy (mainnet)
