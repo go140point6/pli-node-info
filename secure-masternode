@@ -1,0 +1,83 @@
+Configure your XDC Masternode to use secure websockets (WSS) and secure RPC.
+
+Special thanks to @s4njk4n for his write-up that made this much easier to tackle:
+https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
+
+1. Use Let's Encrypt to get certs.  See the write-up in this repo (let-encrypt-ssl), only change a couple things (be sure to do the others):
+    - As you shouldn't be running a plugin node on the MN, don't open 6689, but go ahead and open 443.  Be sure to keep 80 open (LE needs for renewals)
+    - When telling LE what servers, pick your main server name and you two aliases (one for WSS, one for RPC):
+        a. xdc-mainnet01.mydomain.com - this should be an A record in your DNS
+        b. rpc-mainnet.mydomain.com - this is an alias in your DNS (pointing to A record)
+        c. wss-mainnet.mydomain.com - this is an alias in your DNS (pointing to A record)
+      Note: When prompted by LE, add them separated by a comma or space (one line)
+    - When adding the renew_hook, only add this to the bottom instead of the one for the plugin node:
+        renew_hook = systemctl reload nginx
+
+2. Install nginx:
+      sudo apt-get update
+      sudo apt-get install nginx
+
+3. Gather docker information needed:
+      sudo docker inspect mainnet_xinfinnetwork_1
+      or (for apothem)
+      sudo docker inspect testnet_xinfinnetwork_1
+
+      Note: IPAddress (what docker is using) and the ports docker is using for RPC and WSS (match to equivalent HostPort).
+
+4. Configure nginx:
+    - Edit /etc/nginx/nginx.conf and add the following (showing mainnet):
+
+        ##
+        # XDC Node RPC Reverse Proxy (mainnet)
+        ##
+
+        server {
+            listen 443 ssl;
+            server_name rpc-mainnet.mydomain.com;
+
+            ssl_certificate /etc/letsencrypt/live/xdc-masternode01.mydomain.com/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/xdc-masternode01.mydomain.com/privkey.pem;
+
+            location / {
+                proxy_pass http://<Docker IPAdress>:<Docker port for RPC>;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+        }
+
+        ##
+        # XDC Node WSS Reverse Proxy (mainnet)
+        ##
+
+        server {
+            listen 443 ssl;
+            server_name wss-mainnet.mydomain.com;
+
+            ssl_certificate /etc/letsencrypt/live/xdc-masternode01.mydomain.com/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/xdc-masternode01.mydomain.com/privkey.pem;
+
+            location / {
+                proxy_pass http://<Docker IPAddress>:<Docker port for WS>;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+
+                # These three are critical to getting websockets to work
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+            }
+        }
+
+5. Fix permissions.  If you followed lets-encrypt-ssl, the only thing to fix is adding your regular user to the www-data group:
+      sudo usermod -a -G ssl-cert www-data
+
+6. Restart ngnix and check status:
+      sudo systemctl restart nginx
+      sudo systemctl status nginx
+
+7. Block unencrypted traffic to your masternode by removing ports 8989 and 8888 (mainnet) or ports 8999 and 8898 (apothem).  Remember both 443 and 80 should be allowed.
+
+8. Test with your application:
+      RPC = https://rpc-mainnet.mydomain.com
+      WSS = wss://wss-mainnet.mydomain.com
+      
