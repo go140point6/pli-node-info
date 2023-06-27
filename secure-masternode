@@ -35,6 +35,11 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
             listen 443 ssl;
             server_name rpc-mainnet.mydomain.com;
 
+            # Optional to limit what servers can use your RPC
+            allow 123.4.56.78; # pli-oracle01
+            allow 234.5.67.89; # pli-oracle02
+            deny all;
+
             ssl_certificate /etc/letsencrypt/live/xdc-masternode01.mydomain.com/fullchain.pem;
             ssl_certificate_key /etc/letsencrypt/live/xdc-masternode01.mydomain.com/privkey.pem;
 
@@ -52,6 +57,11 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
         server {
             listen 443 ssl;
             server_name wss-mainnet.mydomain.com;
+
+            # Optional to limit what servers can use your WS
+            allow 123.4.56.78; # pli-oracle01
+            allow 234.5.67.89; # pli-oracle02
+            deny all;
 
             ssl_certificate /etc/letsencrypt/live/xdc-masternode01.mydomain.com/fullchain.pem;
             ssl_certificate_key /etc/letsencrypt/live/xdc-masternode01.mydomain.com/privkey.pem;
