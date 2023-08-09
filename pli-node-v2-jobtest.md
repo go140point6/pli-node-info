@@ -85,7 +85,9 @@ Take the Job ID created and remove the hyphens leaving just the numbers:
 D. Consumer Contract
 
 A. Pli Token - leave this as-is for Apothem, change for Mainnet
+
 B. Oracle - This is your newly created OCA
+
 C. jobId - This is your newly created jobId (formatted without the hyphens)
 
 Note: Be sure to change where the code is actually used and not just change the comments.
