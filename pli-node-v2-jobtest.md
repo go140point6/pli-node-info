@@ -30,7 +30,7 @@ After deploying, document the OCA for later use.
 
 A2. Node Fulfillment
 
-In deployed Oracle, pass your Node Address (found under Key Management) in format
+In deployed Oracle, pass your Node Address (found under Key Management) to 'setAuthorizedSenders' in format
 
 ```
 ["0x..."]
