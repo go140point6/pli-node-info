@@ -1,0 +1,117 @@
+A1. Flux Monitor Contract Deployment and Funding.
+
+```
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.6.6;
+import "@goplugin/contracts2_3/src/v0.6/FluxAggregator.sol";
+```
+
+Note: In remix, you must check the "Enable optimization" checkbox, value 200 (default) is fine.
+
+Deploy with following:
+
+```
+_PLI: xdc33f4212b027e22af7e6ba21fc572843c0d701cd1 ## Apothem
+_PAYMENTAMOUNT: 1000000000000000 (0.00001 PLI)
+_TIMEOUT: 60
+_VALIDATOR: 0x0000000000000000000000000000000000000000
+_MINSUBMISSIONVALUE: 0
+_MAXSUBMISSIONVALUE: 9999999999999999
+_DECIMALS: 18
+_DESCRIPTION: XDC/USDT 2DS
+```
+
+Fund contract address with 0.1 PLI token.
+
+Call updateAvailableFunds function and verify with availableFunds call.
+
+B1. Change Oracles
+
+```
+_removed: [] ## If nothing to remove
+_added: ["0x8aaB7152a241f0804F5DB274A6A48fFadb964B79"] ## This is your Plugin Node Address found in Keys
+_addedAdmins: ["0x59232fda0810c603c4906f40fbb3edc594b84cc6"] ## This is your wallet address
+_minSubmissions: 1
+_maxSubmissions: 1 ## if only one OCA or 2 if more than one OCA in _added
+_restartDelay: 0
+```
+
+Note: Before transacting this function, add the job (C1 below) first.
+
+C1. Flux Monitor Job
+
+```
+type = "fluxmonitor"
+schemaVersion = 1
+name = "XDC/USDT Flux 2DS Run1"
+forwardingAllowed = false
+maxTaskDuration = "30s"
+absoluteThreshold = 0
+contractAddress = "0x8A951d6ab2af63346da17D32168FCe33fE29305a"
+drumbeatEnabled = false
+drumbeatSchedule = "CRON_TZ=UTC * */20 * * * *"
+idleTimerPeriod = "30s"
+idleTimerDisabled = false
+pollTimerPeriod = "1m0s"
+pollTimerDisabled = true
+threshold = 0.5
+observationSource = """
+    // data source 1
+    ds1 [type="http" method=GET
+url="https://openapi.bitrue.com/api/v1/ticker/price?symbol=XDCUSDT"]
+    ds1_parse [type="jsonparse" path="price"]
+    ds1_multiply     [type="multiply" input="$(ds1_parse)" times=10000]
+    // data source 2
+    ds2 [type="http" method=GET
+url="https://min-api.cryptocompare.com/data/price?fsym=XDC&tsyms=USDT"]
+    ds2_parse [type="jsonparse" path="USDT"]
+    ds2_multiply     [type="multiply" input="$(ds2_parse)" times=10000]
+    ds1 -> ds1_parse -> ds1_multiply -> medianized_answer
+    ds2 -> ds2_parse -> ds2_multiply -> medianized_answer
+    medianized_answer [type=median]
+"""
+```
+
+```
+type = "fluxmonitor"
+schemaVersion = 1
+name = "XDC/USDT 4api Flux IdleTimer"
+forwardingAllowed = false
+maxTaskDuration = "30s"
+absoluteThreshold = 0
+contractAddress = "0x8A951d6ab2af63346da17D32168FCe33fE29305a"
+drumbeatEnabled = false
+drumbeatSchedule = "CRON_TZ=UTC * */20 * * * *"
+idleTimerPeriod = "30s"
+idleTimerDisabled = false
+pollTimerPeriod = "1m0s"
+pollTimerDisabled = true
+threshold = 0.5
+observationSource = """
+    // data source 1
+    ds1 [type="http" method=GET
+url="https://openapi.bitrue.com/api/v1/ticker/price?symbol=XDCUSDT"]
+    ds1_parse [type="jsonparse" path="price"]
+    ds1_multiply     [type="multiply" input="$(ds1_parse)" times=10000]
+    // data source 2
+    ds2 [type="http" method=GET
+url="https://min-api.cryptocompare.com/data/price?fsym=XDC&tsyms=USDT"]
+    ds2_parse [type="jsonparse" path="USDT"]
+    ds2_multiply     [type="multiply" input="$(ds2_parse)" times=10000]
+    // data source 3
+    ds3 [type="http" method=GET
+url="https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=XDC-USDT"]
+    ds3_parse [type="jsonparse" path="data,price"]
+    ds3_multiply     [type="multiply" input="$(ds3_parse)" times=10000]
+    // data source 4
+    ds4 [type=http method=GET url="https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=XDC&convert=USDT" allowUnrestrictedNetworkAccess="true" headers="[\\"X-CMC_PRO_API_KEY\\", \\"YOUR_API_KEY\\"]"]
+    ds4_parse [type="jsonparse" path="data,XDC,quote,USDT,price"]
+    ds4_multiply     [type="multiply" input="$(ds4_parse)" times=10000]
+    ds1 -> ds1_parse -> ds1_multiply -> medianized_answer
+    ds2 -> ds2_parse -> ds2_multiply -> medianized_answer
+    ds3 -> ds3_parse -> ds3_multiply -> medianized_answer
+    ds4 -> ds4_parse -> ds4_multiply -> medianized_answer
+    medianized_answer [type=median]
+"""
+
+0xd533B1646F942e10faB98938adfbA5AAc6B40535
