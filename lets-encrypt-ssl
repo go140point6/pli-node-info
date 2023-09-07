@@ -56,11 +56,20 @@ Fix permissions
   sudo chmod 0640 /etc/letsencrypt/live/$domain/privkey.pem
   sudo chgrp $user /etc/letsencrypt/live/$domain/privkey.pem
   
-Add a renew_hook
+a1. Add a renew_hook - no Nginx
   sudo vim /etc/letsencrypt/renewal/$domain.conf
 
   add to bottom:
     renew_hook = "runuser -l $user -c 'pm2 restart all --update-env'"
+
+a2. Add a renew_hook - Nginx
+  sudo vim /etc/letsencrypt/renewal/$domain.conf
+
+  Change:
+  authenticator = standalone
+  to
+  authenticator = nginx
+  installer = nginx
 
 Note: user whatever text editor that you are comfortable with, i.e. sudo nano
 Note 2: $user is whichever user you are running the pli service
