@@ -10,8 +10,6 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
         b. rpc-mainnet.mydomain.com - this is an alias in your DNS (pointing to A record)
         c. wss-mainnet.mydomain.com - this is an alias in your DNS (pointing to A record)
       Note: When prompted by LE, add them separated by a comma or space (one line)
-    - When adding the renew_hook, only add this to the bottom instead of the one for the plugin node:
-        renew_hook = systemctl reload nginx
 
 2. Install nginx:
       sudo apt-get update
