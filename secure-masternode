@@ -7,7 +7,7 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
     - As you shouldn't be running a plugin node on the MN, don't open 6689, but go ahead and open 443.  Be sure to keep 80 open (LE needs for renewals)
     - When telling LE what servers, pick your main server name and you two aliases (one for WSS, one for RPC):
         a. xdc-mainnet01.mydomain.com - this should be an A record in your DNS
-        b. rpc-mainnet.mydomain.com - this is an alias in your DNS (pointing to A record)
+        b. erpc-mainnet.mydomain.com - this is an alias in your DNS (pointing to A record)
         c. wss-mainnet.mydomain.com - this is an alias in your DNS (pointing to A record)
       Note: When prompted by LE, add them separated by a comma or space (one line)
 
@@ -86,6 +86,6 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
 7. Block unencrypted traffic to your masternode by removing ports 8989 and 8888 (mainnet) or ports 8999 and 8898 (apothem).  Remember both 443 and 80 should be allowed.
 
 8. Test with your application:
-      RPC = https://rpc-mainnet.mydomain.com
+      RPC = https://erpc-mainnet.mydomain.com
       WSS = wss://wss-mainnet.mydomain.com
       
