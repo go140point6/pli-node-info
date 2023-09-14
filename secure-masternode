@@ -77,7 +77,7 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
         }
 
 5. Fix permissions.  If you followed lets-encrypt-ssl, the only thing to fix is adding your regular user to the www-data group:
-      sudo usermod -a -G ssl-cert www-data
+      sudo usermod -a -G <regular_user> www-data
 
 6. Restart ngnix and check status:
       sudo systemctl restart nginx
