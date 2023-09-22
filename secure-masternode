@@ -15,7 +15,8 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
       sudo apt-get update
       sudo apt-get install nginx
 
-3. Configure docker to always use the same IP for your MN. From what I read, setting a "static" IP address like this isn't considered best practice, but I couldn't find a better solution (likely due to my incredibly poor docker admin skills):
+3. Configure docker to always use the same IP for your MN. From what I read, setting a "static" IP address like this isn't considered best practice, 
+   but I couldn't find a better solution (likely due to my incredibly poor docker admin skills):
     - Edit ~/XinFin-Node/[mainnet or testnet]/docker-compose.yml:
 
     Remove the line -> 
@@ -36,7 +37,9 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
               config:
                 - subnet: 172.19.0.0/24
 
-    Note: Above is for mainnet, use - "30304:30304" for apothem.  Also note the IP address and subnet selected are somewhat arbitrary, I noticed docker selecting subnets btween 18 and 26 so I picked 19.  Perhaps it would be better to use a private range that docker would never use but I don't plan to run any other containers on this VPS at all, so I'm not sure it really matters.
+    Note: Above is for mainnet, use - "30304:30304" for apothem.  Also note the IP address and subnet selected are somewhat arbitrary, 
+    I noticed docker selecting subnets btween 18 and 26 so I picked 19.  Perhaps it would be better to use a private range that docker 
+    would never use but I don't plan to run any other containers on this VPS at all, so I'm not sure it really matters.
 
 4. Restart the container and check docker information to ensure it's correct:
 
@@ -47,7 +50,10 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
       or (for apothem)
       sudo docker inspect testnet_xinfinnetwork_1
 
-      Note: IPAddress (what docker is using) should be what you set above (172.19.0.2).  The ports are whatever docker is using internally and based on what you set inside the start-node.sh (or start-apothem.sh) script.  I'm using 8545 (rpc) and 8555 (wss).  Note that the "official" ports of 8989 and 8888 (mainnet) or 8999 and 8898 (apothem) are not used in this scenario.  You want users to connect to your RPC and WSS via port 443 ONLY (that's why you are setting up the reverse proxy).
+      Note: IPAddress (what docker is using) should be what you set above (172.19.0.2).  The ports are whatever docker is using internally and 
+      based on what you set inside the start-node.sh (or start-apothem.sh) script.  I'm using 8545 (rpc) and 8555 (wss).  Note that the 
+      "official" ports of 8989 and 8888 (mainnet) or 8999 and 8898 (apothem) are not used in this scenario.  You want users to connect to your 
+      RPC and WSS via port 443 ONLY (that's why you are setting up the reverse proxy).
 
 5. Configure nginx (example assumes IPAddress and ports noted above):
     - Edit /etc/nginx/nginx.conf and add the following (showing mainnet) in the http block:
@@ -110,7 +116,9 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
       sudo systemctl restart nginx
       sudo systemctl status nginx
 
-8. Block unencrypted traffic to your masternode by removing ports 8989 and 8888 (mainnet) or ports 8999 and 8898 (apothem).  Remember both 443 and 80 should be allowed, and either 30303 (mainnet) or 30304 (apothem) should be open.  This is the peer-to-peer port and you want to allow this.  Your docker-compose.yml file above is mapping it directly.
+8. Block unencrypted traffic to your masternode by removing ports 8989 and 8888 (mainnet) or ports 8999 and 8898 (apothem).  
+   Remember both 443 and 80 should be allowed, and either 30303 (mainnet) or 30304 (apothem) should be open.  This is the 
+   peer-to-peer port and you want to allow this.  Your docker-compose.yml file above is mapping it directly.
 
 9. Test with your application:
       RPC = https://erpc-mainnet.mydomain.com
