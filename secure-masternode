@@ -51,8 +51,8 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
       sudo docker inspect testnet_xinfinnetwork_1
 
       Note: IPAddress (what docker is using) should be what you set above (172.19.0.2).  The ports are whatever docker is using internally and 
-      based on what you set inside the start-node.sh (or start-apothem.sh) script.  I'm using 8545 (rpc) and 8555 (wss).  Note that the 
-      "official" ports of 8989 and 8888 (mainnet) or 8999 and 8898 (apothem) are not used in this scenario.  You want users to connect to your 
+      based on what you set inside the start-node.sh (or start-apothem.sh) script.  I'm using 8545/8555 (rpc mainnet/apothem) and 8546/8556 (wss mainnet/apothem).  Note that the 
+      "official" public ports of 8989 and 8888 (mainnet) or 8999 and 8898 (apothem) are not used in this scenario.  You want users to connect to your 
       RPC and WSS via port 443 ONLY (that's why you are setting up the reverse proxy).
 
 5. Configure nginx (example assumes IPAddress and ports noted above):
@@ -98,7 +98,7 @@ https://www.xdc.dev/s4njk4n/ssltls-encryption-for-xdc-node-rpcs-k15
             ssl_certificate_key /etc/letsencrypt/live/xdc-masternode01.mydomain.com/privkey.pem;
 
             location / {
-                proxy_pass http://172.19.0.2:8555;
+                proxy_pass http://172.19.0.2:8546;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
 
