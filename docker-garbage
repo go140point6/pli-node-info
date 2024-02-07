@@ -1,0 +1,5 @@
+# See running docker containers
+sudo docker ps -a
+
+# Enter into running container
+sudo docker exec -t -i testnet_xinfinnetwork_1 /bin/bash
