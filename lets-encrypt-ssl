@@ -104,3 +104,6 @@ Edit 2_nodeStartPM2.sh
     
   Note: Be sure to restart the pli service:
     pm2 restart all --update-env
+
+If you want to revoke all certs:
+ certbot revoke --cert-path /etc/letsencrypt/live/MyDomain/fullchain.pem
