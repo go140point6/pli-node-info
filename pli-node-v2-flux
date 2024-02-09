@@ -1,3 +1,15 @@
+Stuck jobs?
+Please try checking your transactions with the following command. Check if there are any transactions that are not 'confirmed' but 'in_progress'.
+```
+sudo -i -u postgres psql -d plugin_mainnet_db -c "select id, nonce, from_address as node_address, to_address as oca, pipeline_task_run_id as jobid, state, created_at from eth_txes;"
+```
+
+ If there are transactions remaining 'in_progress', they can cause a blockage. In that case, you will need to forcibly delete the incomplete transactions with the next command.
+
+```
+sudo -i -u postgres psql -d plugin_mainnet_db -c "delete from eth_txes where state = 'in_progress';"
+```
+
 A1. Flux Monitor Contract Deployment and Funding.
 
 ```
