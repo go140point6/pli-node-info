@@ -15,7 +15,7 @@ Add regular user:
 Add that user to the sudoers file:
   adduser jojo sudo
   
-Exit your terminal and ssh back in as your user 'jojo'.  From this point, you will do everything as 'jojo', never log in as root or 'su' (switch user) as root.
+Exit your terminal and ssh back in as your user 'jojo'.  From this point, you will do everything as 'jojo', never log in as root and only 'sudo su -' (switch user) to root when absolutely needed.
 
 Update your distro
   sudo apt-get update
@@ -64,7 +64,7 @@ and password is turned off, you simply get denied access.
 
 This is what I see when I am successful: Authenticating with public key "id_rsa" from agent
 
-Configure SSH more Securely - Step 1 (optional but recommended - do this is steps, don't do 1 and 2 at the same time until you are
+Configure SSH more Securely - Step 1 (optional but recommended - do this in steps, don't do 1 and 2 at the same time until you are
 confident you know what you are doing)
 
 Note: Do NOT close your terminal session after making these changes.  Leave your session running and start a new one.  This will
